@@ -17,15 +17,19 @@ class Day1
 public:
     Day1()
     {
-        std::ifstream input("Input1");
+        std::ifstream input("../Input1");
 
         if (input.is_open())
         {
             std::string line;
 
+            std::cout << "50" << std::endl;
+
             while (input >> line)
             {
                 int value;
+
+                std::cout << "CurrentLine: " << line << " =========" << std::endl;
 
                 if (line.at(0) == 'R')
                 {
@@ -36,20 +40,19 @@ public:
 
                     current = EvaluateRight(current, value);
 
-                    std::cout << current << ", " << value << ", " << zeroCount - currentZero << std::endl;
+                    std::cout << current << ", " << zeroCount - currentZero << std::endl;
                 }
 
                 if (line.at(0) == 'L')
                 {
                     line.erase(0, 1);
                     value = std::stoi(line);
-                    value *= -1;
 
                     int currentZero = zeroCount;
 
                     current = EvaluateLeft(current, value);
 
-                    std::cout << current << ", " << value << ", " << zeroCount - currentZero << std::endl;
+                    std::cout << current << ", " << zeroCount - currentZero << std::endl;
                 }
             }
 
@@ -62,60 +65,37 @@ public:
 private:
     int EvaluateRight (int pCurrent, int pValue)
     {
-        int currentValue = pCurrent + pValue;
-
-        while (currentValue > 99)
+        while (pValue > 0)
         {
-            currentValue -= 100;
-            zeroCount++;
+            pCurrent++;
+            pValue--;
+
+            if (pCurrent > 99)
+            {
+                pCurrent = 0;
+                zeroCount++;
+            }
         }
 
-        return currentValue;
+        return pCurrent;
     }
 
     int EvaluateLeft(int pCurrent, int pValue)
     {
-        bool startedAtZero = false;
-        if (pCurrent == 0)
-            startedAtZero = true;
-
-        int currentValue = pCurrent + pValue;
-
-        while (currentValue < 0)
+        while (pValue > 0)
         {
-            currentValue += 100;
+            pCurrent--;
+            pValue--;
 
-            if (!startedAtZero)
+            if (pCurrent == 0)
                 zeroCount++;
+
+            if (pCurrent < 0)
+                pCurrent = 99;
         }
 
-        if (currentValue == 0 && !startedAtZero)
-            zeroCount++;
-
-        return currentValue;
+        return pCurrent;
     }
 };
 
 #endif //ADVENTOFCODE2025_DAY1_H
-
-
-/*void EvaluateValue(int pCurrent, int pValue)
-{
-    int tempValue = 0;
-
-    pCurrent += pValue;
-
-    if (pCurrent < 0)
-    {
-        tempValue = pCurrent % 100;
-        pCurrent = 100 + tempValue;
-    }
-
-    if (pCurrent > 99)
-    {
-        tempValue = pCurrent % 100;
-        pCurrent = 0 + tempValue;
-    }
-
-    // return pCurrent;
-}*/
