@@ -17,7 +17,7 @@ class Day1
 public:
     Day1()
     {
-        std::ifstream input("../Input1");
+        std::ifstream input("Input1");
 
         if (input.is_open())
         {
@@ -32,9 +32,11 @@ public:
                     line.erase(0, 1);
                     value = std::stoi(line);
 
+                    int currentZero = zeroCount;
+
                     current = EvaluateRight(current, value);
 
-                    std::cout << current << ", " << value << std::endl;
+                    std::cout << current << ", " << value << ", " << zeroCount - currentZero << std::endl;
                 }
 
                 if (line.at(0) == 'L')
@@ -42,13 +44,13 @@ public:
                     line.erase(0, 1);
                     value = std::stoi(line);
                     value *= -1;
+
+                    int currentZero = zeroCount;
+
                     current = EvaluateLeft(current, value);
 
-                    std::cout << current << ", " << value << std::endl;
+                    std::cout << current << ", " << value << ", " << zeroCount - currentZero << std::endl;
                 }
-
-                if (current == 0)
-                    zeroCount++;
             }
 
             std::cout << "Password: " << zeroCount << std::endl;
@@ -60,22 +62,12 @@ public:
 private:
     int EvaluateRight (int pCurrent, int pValue)
     {
-        int currentValue = pCurrent;
-        int remainder = 100 - pCurrent;
+        int currentValue = pCurrent + pValue;
 
-        if (pValue > remainder)
+        while (currentValue > 99)
         {
-            currentValue = 0;
-            pValue -= remainder;
-
+            currentValue -= 100;
             zeroCount++;
-            zeroCount += std::floor(pValue / 100);
-
-            currentValue += pValue % 100;
-        }
-        else
-        {
-            currentValue += pValue;
         }
 
         return currentValue;
@@ -83,17 +75,24 @@ private:
 
     int EvaluateLeft(int pCurrent, int pValue)
     {
-        int tempValue = 0;
-        pCurrent += pValue;
+        bool startedAtZero = false;
+        if (pCurrent == 0)
+            startedAtZero = true;
 
-        if (pCurrent < 0)
+        int currentValue = pCurrent + pValue;
+
+        while (currentValue < 0)
         {
-            zeroCount += std::floor(pCurrent / -100) + 1;
-            tempValue = pCurrent % 100;
-            pCurrent = 100 + tempValue;
+            currentValue += 100;
+
+            if (!startedAtZero)
+                zeroCount++;
         }
 
-        return pCurrent;
+        if (currentValue == 0 && !startedAtZero)
+            zeroCount++;
+
+        return currentValue;
     }
 };
 
