@@ -1,0 +1,23 @@
+int firstId;
+int secondId;
+
+int currentId = firstId;
+
+while (currentId < secondId)
+{
+    currentId++;
+
+    evaluateId(string firstId);
+}
+
+
+void evaluateId(string IdToEvaulate)
+{
+
+    std::vector<int> invalidId;
+
+    if(invalidId.empty && IdToEvaluate.first != 0)
+        invalidId.Add(first);
+
+
+}
