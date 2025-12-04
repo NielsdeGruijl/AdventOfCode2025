@@ -10,8 +10,8 @@
 
 class Day2
 {
-    std::vector<std::string> firstIndexes;
-    std::vector<std::string> lastIndexes;
+    std::vector<std::string> firstIds;
+    std::vector<std::string> lastIds;
 
     std::string firstId;
     std::string secondId;
@@ -24,7 +24,7 @@ class Day2
 public:
     Day2()
     {
-        std::ifstream input("Day2/TestInput");
+        std::ifstream input("../Day2/TestInput");
         std::string line;
 
         if (input.is_open())
@@ -40,7 +40,7 @@ public:
                 if (c == '-')
                 {
                     std::cout << index << "-";
-                    firstIndexes.push_back(std::move(index));
+                    firstIds.push_back(std::move(index));
                     index.clear();
                     continue;
                 }
@@ -48,7 +48,7 @@ public:
                 if (c == ',')
                 {
                     std::cout << index << std::endl;
-                    lastIndexes.push_back(std::move(index));
+                    lastIds.push_back(std::move(index));
                     index.clear();
                     continue;
                 }
@@ -57,10 +57,10 @@ public:
             }
 
             std::cout << index << std::endl;
-            lastIndexes.push_back(std::move(index));
+            lastIds.push_back(std::move(index));
         }
 
-        for (int i = 0; i < firstIndexes.size(); i++)
+        for (int i = 0; i < firstIds.size(); i++)
         {
             std::cout << firstIndexes[i] << ", " << lastIndexes[i] << std::endl;
             EvaluateIndexRange(std::stoll(firstIndexes[i]), std::stoll(lastIndexes[i]));
