@@ -16,7 +16,7 @@ class Day2
     std::string firstId;
     std::string secondId;
 
-    int finalValue = 0;
+    long long finalValue = 0;
 
     int first;
     int last;
@@ -62,23 +62,61 @@ public:
 
         for (int i = 0; i < firstIndexes.size(); i++)
         {
-            EvaluateIndexRange(std::stoi(firstIndexes[i]), std::stoi(lastIndexes[i]));
+            std::cout << firstIndexes[i] << ", " << lastIndexes[i] << std::endl;
+            EvaluateIndexRange(std::stoll(firstIndexes[i]), std::stoll(lastIndexes[i]));
         }
-
 
         std::cout << finalValue << std::endl;
     }
 
-    void EvaluateIndexRange(int firstIndex, int lastIndex)
+    void EvaluateIndexRange(long long currentIdValue, long long lastIdValue)
     {
-        while (firstIndex <= lastIndex)
+        while (currentIdValue <= lastIdValue)
         {
-            // Check indexes
+            std::string currentId = std::to_string(currentIdValue);
+            std::vector<std::string> possibleIds;
+            std::string firstHalf;
+            std::string secondHalf;
 
-            firstIndex++;
+            std::string test;
+            for (int i = 0; i < currentId.length(); i++)
+            {
+                if (test.empty())
+                {
+                    test.push_back(currentId[i]);
+                    continue;
+                }
+
+                if (test[0] == currentId[i])
+                {
+                    test.push_back(currentId[i]);
+                    continue;
+                }
+                else if (test.length() > 1)
+                {
+                    for (int i = 1; i < test.size(); i++)
+                    {
+                        if (test[i] != currentId[i])
+                            continue;
+
+                        if (i == test.size() && i != currentId.size())
+                            test.push_back(currentId[i]);
+                    }
+                }
+
+                //firstHalf.push_back(currentId[i]);
+                //secondHalf.push_back(currentId[i + halfLength]);
+            }
+
+            if (test.length() == currentId.length())
+            {
+                std::cout << "INVALID: " << currentId << std::endl;
+                finalValue += currentIdValue;
+            }
+
+            currentIdValue++;
         }
     }
-
 };
 
 #endif //ADVENTOFCODE2025_DAY2_H
