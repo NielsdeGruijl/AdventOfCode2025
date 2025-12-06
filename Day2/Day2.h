@@ -24,7 +24,7 @@ class Day2
 public:
     Day2()
     {
-        std::ifstream input("Day2/Input2.txt");
+        std::ifstream input("../Day2/Input2.txt");
         std::string line;
 
         if (input.is_open())
@@ -62,8 +62,8 @@ public:
 
         for (int i = 0; i < firstIds.size(); i++)
         {
-            std::cout << firstIndexes[i] << ", " << lastIndexes[i] << std::endl;
-            EvaluateIndexRange(std::stoll(firstIndexes[i]), std::stoll(lastIndexes[i]));
+            //std::cout << firstIds[i] << ", " << lastIds[i] << std::endl;
+            EvaluateIndexRange(std::stoll(firstIds[i]), std::stoll(lastIds[i]));
         }
 
         std::cout << "Answer: " << finalValue << std::endl;
@@ -71,15 +71,15 @@ public:
 
     void EvaluateIndexRange(long long currentIdValue, long long lastIdValue)
     {
+        int currentIdLength = 0;
+        int highestSequenceLength = 1;
+
         while (currentIdValue <= lastIdValue)
         {
             std::string currentId = std::to_string(currentIdValue);
 
             std::string sequence;
             std::string test;
-
-            int highestSequenceLength = 1;
-            int currentIdLength = 0;
 
             for (int i = 0; i < currentId.length(); i++)
             {
@@ -96,28 +96,34 @@ public:
                     }
 
                     highestSequenceLength = a;
+
+                    //std::cout << "new sequence length: " << highestSequenceLength << std::endl;
                 }
 
-                if (test.empty())
+                if (sequence.empty())
                 {
-                    test.push_back(currentId[i]);
                     sequence.push_back(currentId[i]);
                     continue;
                 }
 
-                if (sequence.length() > currentId.length() / 2)
-                    break;
-
-                if (currentId.length() % sequence.length() != 0)
+                /*if (sequence.length() > currentId.length() / 2)
                 {
-                    if (i < highestSequenceLength)
+                    std::cout << "Sequence longer than id: " << sequence.length() << ", id length: " << currentId.length() / 2 << std::endl;
+                    break;
+                }*/
+
+                /*if (currentId.length() % sequence.length() != 0)
+                {
+                    if (sequence.length() < highestSequenceLength)
                         sequence.push_back(currentId[i]);
                     else
                         break;
-                }
+                }*/
 
-                if (sequence[0] == currentId[i])
+                if (sequence[0] == currentId[i] && currentId.length() % sequence.length() == 0)
                 {
+                    //std::cout << "----" << std::endl;
+
                     bool isSequence = true;
                     for (int j = 0; j < currentId.length(); j++)
                     {
@@ -126,11 +132,15 @@ public:
                         // fix divide by zero
                         int sequenceIndex;
                         if (count > 0)
-                            sequenceIndex = j - (count * sequence.length());
-                        else sequenceIndex = j;
+                            sequenceIndex = j - count * sequence.length();
+                        else
+                            sequenceIndex = j;
+
 
                         if (sequence[sequenceIndex] != currentId[j])
                         {
+                            //std::cout << sequence << ", " << currentId << ", " << std::endl;
+                            //std::cout << sequence.length() << std::endl;
                             isSequence = false;
                             break;
                         }
@@ -138,23 +148,29 @@ public:
 
                     if (!isSequence)
                     {
-                        if (i < currentId.length() / 2)
+                        if (sequence.length() < highestSequenceLength)
                         {
                             sequence.push_back(currentId[i]);
+
                             continue;
                         }
 
                         break;
                     }
 
-                    std::cout << "INVALID: " << currentId << " SEQUENCE: " << sequence << ", sequencelength: " << highestSequenceLength << std::endl;
+                    if (currentId.length() == 3)
+                        std::cout << "INVALID: " << currentId << " SEQUENCE: " << sequence << std::endl;
+
                     finalValue += currentIdValue;
                     break;
                 }
-                else
-                {
+
+                if (sequence.length() < highestSequenceLength)
                     sequence.push_back(currentId[i]);
-                }
+
+                //std::cout << "New sequence: " << sequence << std::endl;
+
+                //std::cout << sequence.length() << ", " << highestSequenceLength << std::endl;
             }
 
             currentIdValue++;
